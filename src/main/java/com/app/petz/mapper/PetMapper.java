@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @Component
 public class PetMapper {
+    private final DateTimeFormatter birthdayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public PetCoreDto petToPetDto(Pet pet) {
         return PetCoreDto.builder()
                 .id(pet.getId())
@@ -31,7 +32,7 @@ public class PetMapper {
         return PetCoreDto.builder()
                 .name(createRequest.getName())
                 .age(createRequest.getAge())
-                .birthday(createRequest.getBirthday())
+                .birthday(LocalDate.parse(createRequest.getBirthday(), birthdayFormatter))
                 .weight(createRequest.getWeight())
                 .color(createRequest.getColor())
                 .build();
@@ -73,15 +74,13 @@ public class PetMapper {
     }
 
     public Pet petPutRequestToPet(Pet pet, PetPutRequestJson petPutRequestJson){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         return Pet.builder()
                 .id(pet.getId())
                 .removed(pet.getRemoved())
                 .creationDate(pet.getCreationDate())
                 .name(petPutRequestJson.getName() != null ? petPutRequestJson.getName() : pet.getName())
                 .age(petPutRequestJson.getAge() != null ? petPutRequestJson.getAge() : pet.getAge())
-                .birthday(petPutRequestJson.getBirthday() != null ? LocalDate.parse(petPutRequestJson.getBirthday(), formatter) : pet.getBirthday())
+                .birthday(petPutRequestJson.getBirthday() != null ? LocalDate.parse(petPutRequestJson.getBirthday(), birthdayFormatter) : pet.getBirthday())
                 .weight(petPutRequestJson.getWeight() != null ? petPutRequestJson.getWeight() : pet.getWeight())
                 .color(petPutRequestJson.getColor() != null ? petPutRequestJson.getColor() : pet.getColor())
                 .mainImageUrl(petPutRequestJson.getMainImageUrl() != null ? petPutRequestJson.getMainImageUrl() : pet.getMainImageUrl())
