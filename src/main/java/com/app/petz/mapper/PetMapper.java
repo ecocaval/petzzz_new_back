@@ -2,7 +2,8 @@ package com.app.petz.mapper;
 
 import com.app.petz.core.dto.PetCoreDto;
 import com.app.petz.core.requests.CreatePetRequestJson;
-import com.app.petz.core.responses.CreatePetResponseJson;
+import com.app.petz.core.responses.PetGetResponseJson;
+import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.model.Pet;
 import org.springframework.stereotype.Component;
 
@@ -45,12 +46,26 @@ public class PetMapper {
                 .build();
     }
 
-    public CreatePetResponseJson petToResponseJson(Pet pet) {
-        return CreatePetResponseJson.builder()
+    public PetPostResponseJson petToResponseJson(Pet pet) {
+        return PetPostResponseJson.builder()
                 .petUuid(pet.getId())
                 .message("O pet " + pet.getName() + " foi criado com sucesso.")
                 .timeStamp(LocalDateTime.now())
                 .build();
+    }
+
+    public PetGetResponseJson petToGetResponseJson(Pet pet){
+        return PetGetResponseJson.builder()
+                .id(pet.getId())
+                .creationDate(pet.getCreationDate())
+                .name(pet.getName())
+                .age(pet.getAge())
+                .birthday(pet.getBirthday())
+                .weight(pet.getWeight())
+                .color(pet.getColor())
+                .mainImageUrl(pet.getMainImageUrl())
+                .build();
+
     }
 
 
