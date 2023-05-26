@@ -41,6 +41,9 @@ public class PetService {
     public Pet checkPetExistence(UUID id){
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found!"));
+
+        if(pet.getRemoved()) throw new PetNotFoundException("Pet deleted!");
+
         return pet;
     }
     public PetGetResponseJson findById(UUID id) {
