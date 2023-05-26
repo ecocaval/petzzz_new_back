@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreatePetResponseJson {
+public class PetPostResponseJson {
     private LocalDateTime timeStamp;
     private String message;
     private UUID petUuid;
