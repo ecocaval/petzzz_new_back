@@ -38,20 +38,40 @@ public class PetService {
         return pets;
     }
 
-    public PetGetResponseJson findById(UUID id) {
+    public Pet checkPetExistence(UUID id){
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found!"));
+        return pet;
+    }
+    public PetGetResponseJson findById(UUID id) {
+        Pet pet = checkPetExistence(id);
 
         return petMapper.petToGetResponseJson(pet);
     }
 
 
     public void replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
-        Pet petFinded = petRepository.findById(id)
-                .orElseThrow(() -> new PetNotFoundException(("Pet not found!")));
+        Pet petFinded = checkPetExistence(id);
 
         Pet petUpdated = petMapper.petPutRequestToPet(petFinded, petPutRequestJson);
 
         petRepository.save(petUpdated);
+    }
+
+    public void deletePet(UUID id) {
+        Pet petFinded = checkPetExistence(id);
+
+        Pet petDeleted = Pet.builder()
+                .id(id)
+                .name(petFinded.getName())
+                .creationDate(petFinded.getCreationDate())
+                .removed(true)
+                .age(petFinded.getAge())
+                .birthday(petFinded.getBirthday())
+                .weight(petFinded.getWeight())
+                .color(petFinded.getColor())
+                .build();
+
+        petRepository.save(petDeleted);
     }
 }

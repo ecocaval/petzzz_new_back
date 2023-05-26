@@ -53,8 +53,14 @@ public class PetController {
     }
 
     @PutMapping("/pet/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable UUID id, @RequestBody PetPutRequestJson petPutRequestJson){
+    public ResponseEntity<Void> replacePet(@PathVariable UUID id, @RequestBody PetPutRequestJson petPutRequestJson){
         petService.replacePet(id, petPutRequestJson);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/pet/{id}")
+    public ResponseEntity<Void>  deletePet(@PathVariable UUID id){
+        petService.deletePet(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
