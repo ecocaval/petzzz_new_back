@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class RestExceptionHandler {
 
     @ExceptionHandler(PetNotFoundException.class)
-    public ResponseEntity<PetNotFoundExceptionDetails> handlePetNotFoundException(PetNotFoundException exception){
+    protected ResponseEntity<PetNotFoundExceptionDetails> handlePetNotFoundException(PetNotFoundException exception){
         return new ResponseEntity<>(
                 PetNotFoundExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
