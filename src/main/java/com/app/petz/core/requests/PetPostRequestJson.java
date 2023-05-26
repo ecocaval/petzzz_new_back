@@ -17,7 +17,7 @@ public class PetPostRequestJson {
     private String name;
     @NotNull
     private Integer age;
-    private LocalDate birthday;
+    private String birthday;
     private Double weight;
     private String color;
     private String mainImageUrl;
