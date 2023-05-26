@@ -1,7 +1,8 @@
 package com.app.petz.controller;
 
 import com.app.petz.core.dto.PetCoreDto;
-import com.app.petz.core.requests.CreatePetRequestJson;
+import com.app.petz.core.requests.PetPostRequestJson;
+import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.mapper.PetMapper;
@@ -12,10 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.tokens.Token;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
@@ -33,10 +32,10 @@ public class PetController {
 
     @PostMapping("/pet")
     public ResponseEntity<PetPostResponseJson> createPet(
-            @RequestBody @Valid CreatePetRequestJson createPetRequestJson
+            @RequestBody @Valid PetPostRequestJson petPostRequestJson
     ) {
 
-        PetCoreDto petCoreDto = petMapper.createRequestToPetDto(createPetRequestJson);
+        PetCoreDto petCoreDto = petMapper.createRequestToPetDto(petPostRequestJson);
 
         Pet pet = petService.createPet(petCoreDto);
 
@@ -56,6 +55,13 @@ public class PetController {
         PetGetResponseJson pet = petService.findById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(pet);
+    }
+
+    @PutMapping("/pet/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id, @RequestBody PetPutRequestJson petPutRequestJson){
+        petService.replacePet(id, petPutRequestJson);
+        log.info(petPutRequestJson.getBirthday());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

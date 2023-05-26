@@ -1,6 +1,7 @@
 package com.app.petz.service;
 
 import com.app.petz.core.dto.PetCoreDto;
+import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.exception.PetNotFoundException;
 import com.app.petz.mapper.PetMapper;
@@ -42,5 +43,15 @@ public class PetService {
                 .orElseThrow(() -> new PetNotFoundException("Pet not found!"));
 
         return petMapper.petToGetResponseJson(pet);
+    }
+
+
+    public void replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
+        Pet petFinded = petRepository.findById(id)
+                .orElseThrow(() -> new PetNotFoundException(("Pet not found!")));
+
+        Pet petUpdated = petMapper.petPutRequestToPet(petFinded, petPutRequestJson);
+
+        petRepository.save(petUpdated);
     }
 }

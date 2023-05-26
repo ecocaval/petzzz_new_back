@@ -1,13 +1,17 @@
 package com.app.petz.mapper;
 
 import com.app.petz.core.dto.PetCoreDto;
-import com.app.petz.core.requests.CreatePetRequestJson;
+import com.app.petz.core.requests.PetPostRequestJson;
+import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.model.Pet;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Component
 public class PetMapper {
@@ -23,7 +27,7 @@ public class PetMapper {
                 .build();
     }
 
-    public PetCoreDto createRequestToPetDto(CreatePetRequestJson createRequest) {
+    public PetCoreDto createRequestToPetDto(PetPostRequestJson createRequest) {
         return PetCoreDto.builder()
                 .name(createRequest.getName())
                 .age(createRequest.getAge())
@@ -66,6 +70,22 @@ public class PetMapper {
                 .mainImageUrl(pet.getMainImageUrl())
                 .build();
 
+    }
+
+    public Pet petPutRequestToPet(Pet pet, PetPutRequestJson petPutRequestJson){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        return Pet.builder()
+                .id(pet.getId())
+                .removed(pet.getRemoved())
+                .creationDate(pet.getCreationDate())
+                .name(petPutRequestJson.getName() != null ? petPutRequestJson.getName() : pet.getName())
+                .age(petPutRequestJson.getAge() != null ? petPutRequestJson.getAge() : pet.getAge())
+                .birthday(petPutRequestJson.getBirthday() != null ? LocalDate.parse(petPutRequestJson.getBirthday(), formatter) : pet.getBirthday())
+                .weight(petPutRequestJson.getWeight() != null ? petPutRequestJson.getWeight() : pet.getWeight())
+                .color(petPutRequestJson.getColor() != null ? petPutRequestJson.getColor() : pet.getColor())
+                .mainImageUrl(petPutRequestJson.getMainImageUrl() != null ? petPutRequestJson.getMainImageUrl() : pet.getMainImageUrl())
+                .build();
     }
 
 
