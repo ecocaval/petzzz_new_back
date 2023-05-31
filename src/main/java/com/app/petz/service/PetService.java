@@ -1,6 +1,7 @@
 package com.app.petz.service;
 
 import com.app.petz.core.dto.PetCoreDto;
+import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.exception.PetNotFoundException;
@@ -11,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
@@ -27,8 +27,8 @@ public class PetService {
         this.petRepository = petRepository;
     }
 
-    public Pet createPet(PetCoreDto petCoreDto) {
-        Pet pet = petMapper.petDtoToPet(petCoreDto);
+    public Pet createPet(PetPostRequestJson petPostRequestJson) {
+        Pet pet = petMapper.createRequestToPet(petPostRequestJson);
         return petRepository.save(pet);
     }
 

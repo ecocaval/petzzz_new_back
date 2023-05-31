@@ -30,9 +30,7 @@ public class PetController {
     public ResponseEntity<PetPostResponseJson> createPet(
             @RequestBody @Valid PetPostRequestJson petPostRequestJson
     ) {
-        PetCoreDto petCoreDto = petMapper.createRequestToPetDto(petPostRequestJson);
-
-        Pet pet = petService.createPet(petCoreDto);
+        Pet pet = petService.createPet(petPostRequestJson);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                               .body(petMapper.petToResponseJson(pet));
