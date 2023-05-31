@@ -15,5 +15,5 @@ import java.util.UUID;
 public class PetPostResponseJson {
     private LocalDateTime timeStamp;
     private String message;
-    private UUID petUuid;
+    private UUID id;
 }

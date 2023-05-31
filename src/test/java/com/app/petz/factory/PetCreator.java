@@ -1,10 +1,13 @@
 package com.app.petz.factory;
 
+import com.app.petz.core.requests.PetPostRequestJson;
+import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.model.Pet;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class PetCreator {
     public static Pet createPetToBeSaved(){
@@ -20,14 +23,49 @@ public class PetCreator {
                 .build();
     }
 
-    public static Pet createPetToBeUpdated(){
+    public static Pet createValidPet(){
         return Pet.builder()
-                .name("Doguinho Atualizado")
-                .age(7)
-                .color("Azul")
-                .weight(11.0)
+                .id(UUID.fromString("b2664036-fe96-11ed-be56-0242ac120002"))
+                .name("Doguinho")
+                .age(6)
+                .creationDate(LocalDateTime.now())
+                .removed(false)
+                .color("Caramelo")
+                .weight(18.0)
                 .birthday(LocalDate.parse("28/03/2018", DateTimeFormatter.ofPattern("dd/MM/yyyy")))
                 .mainImageUrl("http://")
+                .build();
+    }
+
+    public static Pet createValidUpdatedPet(){
+        return Pet.builder()
+                .id(UUID.fromString("b2664036-fe96-11ed-be56-0242ac120002"))
+                .name("Doguinho Atualizado")
+                .age(8)
+                .creationDate(LocalDateTime.now())
+                .removed(false)
+                .color("Caramelo Claro")
+                .weight(18.0)
+                .birthday(LocalDate.parse("28/03/2018", DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .mainImageUrl("http://")
+                .build();
+    }
+
+    public static PetPostRequestJson createPetPostRequestJson(){
+        return PetPostRequestJson.builder()
+                .name(PetCreator.createValidPet().getName())
+                .age(PetCreator.createValidPet().getAge())
+                .birthday("20/04/1999")
+                .weight(PetCreator.createValidPet().getWeight())
+                .color(PetCreator.createValidPet().getColor())
+                .build();
+    }
+
+    public static PetPostResponseJson createPetPostResponseJson(){
+        return PetPostResponseJson.builder()
+                .id(UUID.fromString("b2664036-fe96-11ed-be56-0242ac120002"))
+                .timeStamp(LocalDateTime.now())
+                .message("O pet Doguinho da request foi criado com sucesso.")
                 .build();
     }
 

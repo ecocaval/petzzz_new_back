@@ -31,23 +31,17 @@ public class PetController {
             @RequestBody @Valid PetPostRequestJson petPostRequestJson
     ) {
         Pet pet = petService.createPet(petPostRequestJson);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                              .body(petMapper.petToResponseJson(pet));
+        return new ResponseEntity<>(petMapper.petToResponseJson(pet), HttpStatus.CREATED);
     }
 
     @GetMapping("/pet/all")
     public ResponseEntity<List<Pet>> listAll(){
-        List<Pet> pets = petService.listAll();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(pets);
+        return new ResponseEntity<>(petService.listAll(), HttpStatus.OK);
     }
 
     @GetMapping("/pet/{id}")
     public ResponseEntity<PetGetResponseJson> findById(@PathVariable UUID id){
-        PetGetResponseJson pet = petService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(pet);
+        return new ResponseEntity<>(petService.findById(id), HttpStatus.OK);
     }
 
     @PutMapping("/pet/{id}")

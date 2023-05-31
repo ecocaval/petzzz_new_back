@@ -44,7 +44,7 @@ public class PetMapper {
 
     public PetPostResponseJson petToResponseJson(Pet pet) {
         return PetPostResponseJson.builder()
-                .petUuid(pet.getId())
+                .id(pet.getId())
                 .message("O pet " + pet.getName() + " foi criado com sucesso.")
                 .timeStamp(LocalDateTime.now())
                 .build();
