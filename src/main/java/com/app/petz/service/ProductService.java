@@ -6,7 +6,11 @@ import com.app.petz.model.Product;
 import com.app.petz.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Log4j2
 @Service
@@ -17,5 +21,13 @@ public class ProductService {
     public Product createProduct(ProductPostRequestJson productPostRequestJson) {
         Product product = productMapper.productPostRequestJsonToProduct(productPostRequestJson);
         return productRepository.save(product);
+    }
+
+    public Page<Product> listPageable(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    public List<Product> listAllNonPageable(){
+        return productRepository.findAll();
     }
 }
