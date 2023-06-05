@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Log4j2
 @Service
@@ -29,5 +31,9 @@ public class ProductService {
 
     public List<Product> listAllNonPageable(){
         return productRepository.findAll();
+    }
+
+    public Optional<Product> findById(UUID id) {
+        return productRepository.findById(id);
     }
 }

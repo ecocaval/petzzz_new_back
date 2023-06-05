@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Log4j2
 @RestController
@@ -38,5 +40,10 @@ public class ProductController {
     @GetMapping("/product/all")
     public ResponseEntity<List<Product>> listAll(){
         return new ResponseEntity<>(productService.listAllNonPageable(), HttpStatus.OK);
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Optional<Product>> findById(@PathVariable UUID id){
+        return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
     }
 }
