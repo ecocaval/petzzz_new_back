@@ -1,6 +1,7 @@
 package com.app.petz.controller;
 
 import com.app.petz.core.requests.ProductPostRequestJson;
+import com.app.petz.core.requests.ProductPutRequestJson;
 import com.app.petz.core.responses.ProductPostResponseJson;
 import com.app.petz.mapper.ProductMapper;
 import com.app.petz.model.Product;
@@ -29,7 +30,7 @@ public class ProductController {
     @PostMapping("/product")
     public ResponseEntity<ProductPostResponseJson> createProduct(@RequestBody @Valid ProductPostRequestJson productPostRequestJson){
         Product product = productService.createProduct(productPostRequestJson);
-        return new ResponseEntity<>(productMapper.productToProductResponseJson(product), HttpStatus.CREATED);
+        return new ResponseEntity<>(productMapper.productToProductPostResponseJson(product), HttpStatus.CREATED);
     }
 
     @GetMapping("/product")
@@ -43,7 +44,14 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<Optional<Product>> findById(@PathVariable UUID id){
+    public ResponseEntity<Product> findById(@PathVariable UUID id){
         return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
     }
+
+    @PutMapping("/product/{id}")
+    public ResponseEntity<Void> replaceProduct(@PathVariable UUID id, @RequestBody ProductPutRequestJson productPutRequestJson){
+        productService.replaceProduct(id ,productPutRequestJson);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

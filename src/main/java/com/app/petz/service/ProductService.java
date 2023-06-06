@@ -1,6 +1,8 @@
 package com.app.petz.service;
 
 import com.app.petz.core.requests.ProductPostRequestJson;
+import com.app.petz.core.requests.ProductPutRequestJson;
+import com.app.petz.exception.ProductNotFoundException;
 import com.app.petz.mapper.ProductMapper;
 import com.app.petz.model.Product;
 import com.app.petz.repository.ProductRepository;
@@ -33,7 +35,17 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Optional<Product> findById(UUID id) {
-        return productRepository.findById(id);
+    public Product findById(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
+        return product;
+    }
+
+    public void replaceProduct(UUID id, ProductPutRequestJson productPutRequestJson) {
+        Product productFinded = findById(id);
+
+        Product productUpdated = productMapper.productPutRequestToProduct(productFinded, productPutRequestJson);
+
+        productRepository.save(productUpdated);
     }
 }
