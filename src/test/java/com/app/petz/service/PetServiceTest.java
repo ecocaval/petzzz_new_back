@@ -1,7 +1,7 @@
 package com.app.petz.service;
 
 import com.app.petz.core.requests.PetPostRequestJson;
-import com.app.petz.core.responses.PetGetResponseJson;
+import com.app.petz.core.responses.PetGetPutResponseJson;
 import com.app.petz.exception.PetNotFoundException;
 import com.app.petz.factory.PetCreator;
 import com.app.petz.mapper.PetMapper;
@@ -38,7 +38,7 @@ public class PetServiceTest {
         BDDMockito.when(petMapperMock.createRequestToPet(ArgumentMatchers.any(PetPostRequestJson.class)))
                         .thenReturn(PetCreator.createValidPet());
 
-        BDDMockito.when(petMapperMock.petToGetResponseJson(ArgumentMatchers.any(Pet.class)))
+        BDDMockito.when(petMapperMock.petToGetPutResponseJson(ArgumentMatchers.any(Pet.class)))
                         .thenReturn(PetCreator.createPetGetResponseJson());
 
         BDDMockito.when(petRepositoryMock.findById(ArgumentMatchers.any(UUID.class)))
@@ -63,15 +63,15 @@ public class PetServiceTest {
     @Test
     @DisplayName("findById return PetGetResponseJson when successul ")
     void findById_ReturnsPetGetResponseJson_WhenSuccessul(){
-        UUID expectedId = PetCreator.createPetGetResponseJson().getId();
+        UUID expectedId = PetCreator.createPetGetResponseJson().id();
 
-        PetGetResponseJson petFinded = petService.findById(expectedId);
+        PetGetPutResponseJson petFinded = petService.findById(expectedId);
 
 
         Assertions.assertThat(petFinded)
                 .isNotNull();
 
-        Assertions.assertThat(petFinded.getId())
+        Assertions.assertThat(petFinded.id())
                 .isEqualTo(expectedId);
     }
     @Test

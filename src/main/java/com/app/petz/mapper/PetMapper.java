@@ -3,7 +3,7 @@ package com.app.petz.mapper;
 import com.app.petz.core.dto.PetCoreDto;
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetGetResponseJson;
+import com.app.petz.core.responses.PetGetPutResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.model.Pet;
 import org.springframework.stereotype.Component;
@@ -43,14 +43,14 @@ public class PetMapper {
 
     public PetPostResponseJson petToResponseJson(Pet pet) {
         return PetPostResponseJson.builder()
-                .id(pet.getId())
+                .petUuid(pet.getId())
                 .message("O pet " + pet.getName() + " foi criado com sucesso.")
                 .timeStamp(LocalDateTime.now())
                 .build();
     }
 
-    public PetGetResponseJson petToGetResponseJson(Pet pet){
-        return PetGetResponseJson.builder()
+    public PetGetPutResponseJson petToGetPutResponseJson(Pet pet){
+        return PetGetPutResponseJson.builder()
                 .id(pet.getId())
                 .creationDate(pet.getCreationDate())
                 .name(pet.getName())

@@ -1,9 +1,8 @@
 package com.app.petz.service;
 
-import com.app.petz.core.dto.PetCoreDto;
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetGetResponseJson;
+import com.app.petz.core.responses.PetGetPutResponseJson;
 import com.app.petz.exception.PetNotFoundException;
 import com.app.petz.mapper.PetMapper;
 import com.app.petz.model.Pet;
@@ -44,21 +43,21 @@ public class PetService {
 
         return pet;
     }
-    public PetGetResponseJson findById(UUID id) {
+    public PetGetPutResponseJson findById(UUID id) {
         Pet pet = checkPetExistence(id);
 
-        return petMapper.petToGetResponseJson(pet);
+        return petMapper.petToGetPutResponseJson(pet);
     }
 
 
-    public Pet replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
+    public PetGetPutResponseJson replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
         Pet petFinded = checkPetExistence(id);
 
         Pet petUpdated = petMapper.petPutRequestToPet(petFinded, petPutRequestJson);
 
         petRepository.save(petUpdated);
 
-        return checkPetExistence(id);
+        return petMapper.petToGetPutResponseJson(checkPetExistence(id));
     }
 
     public String deletePet(UUID id) {
@@ -75,7 +74,7 @@ public class PetService {
                 .color(petFinded.getColor())
                 .build();
 
-        petRepository.save(petDeleted);
+        petRepository.save(petRemoved);
 
         return petFinded.getName();
     }

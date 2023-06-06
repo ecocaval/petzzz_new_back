@@ -30,33 +30,33 @@ public class ProductController {
     @PostMapping("/product")
     public ResponseEntity<ProductPostResponseJson> createProduct(@RequestBody @Valid ProductPostRequestJson productPostRequestJson){
         Product product = productService.createProduct(productPostRequestJson);
-        return new ResponseEntity<>(productMapper.productToProductPostResponseJson(product), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.productToProductPostResponseJson(product));
     }
 
     @GetMapping("/product")
     public ResponseEntity<Page<Product>> listPageable(Pageable pageable){
-        return new ResponseEntity<>(productService.listPageable(pageable), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(productService.listPageable(pageable));
     }
 
     @GetMapping("/product/all")
     public ResponseEntity<List<Product>> listAll(){
-        return new ResponseEntity<>(productService.listAllNonPageable(), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(productService.listAllNonPageable());
     }
 
     @GetMapping("/product/{id}")
     public ResponseEntity<Product> findById(@PathVariable UUID id){
-        return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
     }
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Void> replaceProduct(@PathVariable UUID id, @RequestBody ProductPutRequestJson productPutRequestJson){
         productService.replaceProduct(id ,productPutRequestJson);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id){
         productService.deleteProduct(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

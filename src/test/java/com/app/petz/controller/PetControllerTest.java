@@ -2,7 +2,7 @@ package com.app.petz.controller;
 
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetGetResponseJson;
+import com.app.petz.core.responses.PetGetPutResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.factory.PetCreator;
 import com.app.petz.mapper.PetMapper;
@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Log4j2
@@ -38,8 +39,10 @@ class PetControllerTest {
     void setup(){
         BDDMockito.when(petServiceMock.createPet(ArgumentMatchers.any(PetPostRequestJson.class)))
                 .thenReturn(PetCreator.createValidPet());
+
         BDDMockito.when(petMapperMock.createRequestToPet(ArgumentMatchers.any(PetPostRequestJson.class)))
                 .thenReturn(PetCreator.createValidPet());
+
         BDDMockito.when(petMapperMock.petToResponseJson(ArgumentMatchers.any(Pet.class)))
                 .thenReturn(PetCreator.createPetPostResponseJson());
 
@@ -47,7 +50,6 @@ class PetControllerTest {
                 .thenReturn(PetCreator.createPetGetResponseJson());
 
         BDDMockito.doNothing().when(petServiceMock).replacePet(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(PetPutRequestJson.class));
-
     }
 
     @Test
@@ -70,13 +72,13 @@ class PetControllerTest {
 
         ResponseEntity<PetPostResponseJson> petSaved = this.petController.createPet(petPostRequestJson);
 
-        ResponseEntity<PetGetResponseJson> petFinded = this.petController.findById(petSaved.getBody().getId());
+        ResponseEntity<PetGetPutResponseJson> petFinded = this.petController.findById(Objects.requireNonNull(petSaved.getBody()).petUuid());
 
         Assertions.assertThat(petFinded)
                 .isNotNull();
 
-        Assertions.assertThat(petFinded.getBody().getId())
-                .isEqualTo(petSaved.getBody().getId());
+        Assertions.assertThat(petFinded.getBody().id())
+                  .isEqualTo(petSaved.getBody().petUuid());
     }
 
     @Test
@@ -89,7 +91,7 @@ class PetControllerTest {
         Assertions.assertThatCode(() -> petController.replacePet(petToBeUpdated.getId(), petPutRequestJson))
                 .doesNotThrowAnyException();
 
-        ResponseEntity<Void> entity = petController.replacePet(petToBeUpdated.getId(), petPutRequestJson);
+        var entity = petController.replacePet(petToBeUpdated.getId(), petPutRequestJson);
 
         Assertions.assertThat(entity)
                 .isNotNull();
@@ -106,7 +108,7 @@ class PetControllerTest {
         Assertions.assertThatCode(() -> petController.deletePet(petToBeDeleted.getId()))
                 .doesNotThrowAnyException();
 
-        ResponseEntity<Void> entity = petController.deletePet(petToBeDeleted.getId());
+        var entity = petController.deletePet(petToBeDeleted.getId());
 
         Assertions.assertThat(entity)
                 .isNotNull();
