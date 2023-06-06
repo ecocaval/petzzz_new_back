@@ -3,7 +3,6 @@ package com.app.petz.controller;
 import com.app.petz.core.dto.PetCoreDto;
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetDeleteResponseJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.mapper.PetMapper;
@@ -36,38 +35,33 @@ public class PetController {
         Pet pet = petService.createPet(petCoreDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .body(petMapper.petToResponseJson(pet));
+                              .body(petMapper.petToResponseJson(pet));
     }
 
     @GetMapping("/pet/all")
     public ResponseEntity<List<Pet>> listAll(){
         List<Pet> pets = petService.listAll();
         return ResponseEntity.status(HttpStatus.OK)
-                             .body(pets);
+                .body(pets);
     }
 
     @GetMapping("/pet/{id}")
     public ResponseEntity<PetGetResponseJson> findById(@PathVariable UUID id){
         PetGetResponseJson pet = petService.findById(id);
         return ResponseEntity.status(HttpStatus.OK)
-                             .body(pet);
+                .body(pet);
     }
 
     @PutMapping("/pet/{id}")
-    public ResponseEntity<Pet> replacePet(
-            @PathVariable UUID id,
-            @RequestBody PetPutRequestJson petPutRequestJson
-    ){
-        Pet pet = petService.replacePet(id, petPutRequestJson);
-        return ResponseEntity.status(HttpStatus.OK)
-                             .body(pet);
+    public ResponseEntity<Void> replacePet(@PathVariable UUID id, @RequestBody PetPutRequestJson petPutRequestJson){
+        petService.replacePet(id, petPutRequestJson);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/pet/{id}")
-    public ResponseEntity<PetDeleteResponseJson>  deletePet(@PathVariable UUID id){
-        String petName = petService.deletePet(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                             .body(new PetDeleteResponseJson(petName));
+    public ResponseEntity<Void>  deletePet(@PathVariable UUID id){
+        petService.deletePet(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
