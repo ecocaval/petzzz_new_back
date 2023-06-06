@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PetPostResponseJson {
-    private LocalDateTime timeStamp;
+public class ProductPostResponseJson {
+    private LocalDateTime timestamp;
     private String message;
     private UUID id;
 }

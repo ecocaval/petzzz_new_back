@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetPutRequestJson {
+@Builder
+public class ProductPostRequestJson {
     private String name;
-    private Integer age;
-    private String birthday;
-    private Double weight;
-    private String color;
+    private String description;
+    private String sku;
     private String mainImageUrl;
+    private Boolean hasLocalAcquire;
 }

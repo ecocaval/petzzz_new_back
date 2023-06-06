@@ -11,27 +11,17 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Component
 public class PetMapper {
     private final DateTimeFormatter birthdayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public PetCoreDto petToPetDto(Pet pet) {
-        return PetCoreDto.builder()
-                .id(pet.getId())
-                .creationDate(pet.getCreationDate())
-                .name(pet.getName())
-                .age(pet.getAge())
-                .birthday(pet.getBirthday())
-                .weight(pet.getWeight())
-                .color(pet.getColor())
-                .build();
-    }
 
-    public PetCoreDto createRequestToPetDto(PetPostRequestJson createRequest) {
-        return PetCoreDto.builder()
+    public Pet createRequestToPet(PetPostRequestJson createRequest) {
+        return Pet.builder()
                 .name(createRequest.getName())
                 .age(createRequest.getAge())
+                .creationDate(LocalDateTime.now())
+                .removed(false)
                 .birthday(LocalDate.parse(createRequest.getBirthday(), birthdayFormatter))
                 .weight(createRequest.getWeight())
                 .color(createRequest.getColor())
@@ -53,7 +43,7 @@ public class PetMapper {
 
     public PetPostResponseJson petToResponseJson(Pet pet) {
         return PetPostResponseJson.builder()
-                .petUuid(pet.getId())
+                .id(pet.getId())
                 .message("O pet " + pet.getName() + " foi criado com sucesso.")
                 .timeStamp(LocalDateTime.now())
                 .build();
