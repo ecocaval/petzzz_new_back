@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
@@ -34,7 +33,6 @@ public class PetService {
 
     public List<Pet> listAll() {
         List<Pet> pets = petRepository.findAll();
-        log.info(pets);
         return pets;
     }
 
@@ -53,15 +51,17 @@ public class PetService {
     }
 
 
-    public void replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
+    public Pet replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
         Pet petFinded = checkPetExistence(id);
 
         Pet petUpdated = petMapper.petPutRequestToPet(petFinded, petPutRequestJson);
 
         petRepository.save(petUpdated);
+
+        return checkPetExistence(id);
     }
 
-    public void deletePet(UUID id) {
+    public String deletePet(UUID id) {
         Pet petFinded = checkPetExistence(id);
 
         Pet petDeleted = Pet.builder()
@@ -76,5 +76,7 @@ public class PetService {
                 .build();
 
         petRepository.save(petDeleted);
+
+        return petFinded.getName();
     }
 }
