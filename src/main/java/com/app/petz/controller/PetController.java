@@ -30,26 +30,18 @@ public class PetController {
     public ResponseEntity<PetPostResponseJson> createPet(
             @RequestBody @Valid PetPostRequestJson petPostRequestJson
     ) {
-        PetCoreDto petCoreDto = petMapper.createRequestToPetDto(petPostRequestJson);
-
-        Pet pet = petService.createPet(petCoreDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                              .body(petMapper.petToResponseJson(pet));
+        Pet pet = petService.createPet(petPostRequestJson);
+        return new ResponseEntity<>(petMapper.petToResponseJson(pet), HttpStatus.CREATED);
     }
 
     @GetMapping("/pet/all")
     public ResponseEntity<List<Pet>> listAll(){
-        List<Pet> pets = petService.listAll();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(pets);
+        return new ResponseEntity<>(petService.listAll(), HttpStatus.OK);
     }
 
     @GetMapping("/pet/{id}")
     public ResponseEntity<PetGetResponseJson> findById(@PathVariable UUID id){
-        PetGetResponseJson pet = petService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(pet);
+        return new ResponseEntity<>(petService.findById(id), HttpStatus.OK);
     }
 
     @PutMapping("/pet/{id}")

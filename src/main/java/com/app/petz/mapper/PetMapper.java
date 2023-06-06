@@ -15,22 +15,13 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class PetMapper {
     private final DateTimeFormatter birthdayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public PetCoreDto petToPetDto(Pet pet) {
-        return PetCoreDto.builder()
-                .id(pet.getId())
-                .creationDate(pet.getCreationDate())
-                .name(pet.getName())
-                .age(pet.getAge())
-                .birthday(pet.getBirthday())
-                .weight(pet.getWeight())
-                .color(pet.getColor())
-                .build();
-    }
 
-    public PetCoreDto createRequestToPetDto(PetPostRequestJson createRequest) {
-        return PetCoreDto.builder()
+    public Pet createRequestToPet(PetPostRequestJson createRequest) {
+        return Pet.builder()
                 .name(createRequest.name())
                 .age(createRequest.age())
+                .creationDate(LocalDateTime.now())
+                .removed(false)
                 .birthday(LocalDate.parse(createRequest.birthday(), birthdayFormatter))
                 .weight(createRequest.weight())
                 .color(createRequest.color())
@@ -52,7 +43,7 @@ public class PetMapper {
 
     public PetPostResponseJson petToResponseJson(Pet pet) {
         return PetPostResponseJson.builder()
-                .petUuid(pet.getId())
+                .id(pet.getId())
                 .message("O pet " + pet.getName() + " foi criado com sucesso.")
                 .timeStamp(LocalDateTime.now())
                 .build();

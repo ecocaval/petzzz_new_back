@@ -1,6 +1,7 @@
 package com.app.petz.service;
 
 import com.app.petz.core.dto.PetCoreDto;
+import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.exception.PetNotFoundException;
@@ -26,8 +27,8 @@ public class PetService {
         this.petRepository = petRepository;
     }
 
-    public Pet createPet(PetCoreDto petCoreDto) {
-        Pet pet = petMapper.petDtoToPet(petCoreDto);
+    public Pet createPet(PetPostRequestJson petPostRequestJson) {
+        Pet pet = petMapper.createRequestToPet(petPostRequestJson);
         return petRepository.save(pet);
     }
 
@@ -39,7 +40,6 @@ public class PetService {
     public Pet checkPetExistence(UUID id){
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found!"));
-
         if(pet.getRemoved()) throw new PetNotFoundException("Pet deleted!");
 
         return pet;
@@ -64,7 +64,7 @@ public class PetService {
     public String deletePet(UUID id) {
         Pet petFinded = checkPetExistence(id);
 
-        Pet petDeleted = Pet.builder()
+        Pet petRemoved = Pet.builder()
                 .id(id)
                 .name(petFinded.getName())
                 .creationDate(petFinded.getCreationDate())
