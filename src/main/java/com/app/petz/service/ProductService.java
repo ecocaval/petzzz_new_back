@@ -38,6 +38,7 @@ public class ProductService {
     public Product findById(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
+        if(product.getRemoved()) throw new ProductNotFoundException("Product deleted!");
         return product;
     }
 
@@ -47,5 +48,22 @@ public class ProductService {
         Product productUpdated = productMapper.productPutRequestToProduct(productFinded, productPutRequestJson);
 
         productRepository.save(productUpdated);
+    }
+
+    public void deleteProduct(UUID id) {
+        Product productFinded = findById(id);
+
+        Product productRemoved = Product.builder()
+                .id(productFinded.getId())
+                .removed(true)
+                .creationDate(productFinded.getCreationDate())
+                .name(productFinded.getName())
+                .description(productFinded.getDescription())
+                .sku(productFinded.getSku())
+                .mainImageUrl(productFinded.getMainImageUrl())
+                .hasLocalAcquire(productFinded.getHasLocalAcquire())
+                .build();
+
+        productRepository.save(productRemoved);
     }
 }

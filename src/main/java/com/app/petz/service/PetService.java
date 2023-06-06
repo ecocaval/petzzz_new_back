@@ -63,7 +63,7 @@ public class PetService {
     public void deletePet(UUID id) {
         Pet petFinded = checkPetExistence(id);
 
-        Pet petDeleted = Pet.builder()
+        Pet petRemoved = Pet.builder()
                 .id(id)
                 .name(petFinded.getName())
                 .creationDate(petFinded.getCreationDate())
@@ -74,6 +74,6 @@ public class PetService {
                 .color(petFinded.getColor())
                 .build();
 
-        petRepository.save(petDeleted);
+        petRepository.save(petRemoved);
     }
 }
