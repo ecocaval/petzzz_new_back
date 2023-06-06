@@ -18,26 +18,26 @@ public class PetMapper {
 
     public Pet createRequestToPet(PetPostRequestJson createRequest) {
         return Pet.builder()
-                .name(createRequest.getName())
-                .age(createRequest.getAge())
+                .name(createRequest.name())
+                .age(createRequest.age())
                 .creationDate(LocalDateTime.now())
                 .removed(false)
-                .birthday(LocalDate.parse(createRequest.getBirthday(), birthdayFormatter))
-                .weight(createRequest.getWeight())
-                .color(createRequest.getColor())
+                .birthday(LocalDate.parse(createRequest.birthday(), birthdayFormatter))
+                .weight(createRequest.weight())
+                .color(createRequest.color())
                 .build();
     }
 
     public Pet petDtoToPet(PetCoreDto petCoreDto) {
         return Pet.builder()
-                .id(petCoreDto.getId())
+                .id(petCoreDto.id())
                 .removed(false)
                 .creationDate(LocalDateTime.now())
-                .name(petCoreDto.getName())
-                .age(petCoreDto.getAge())
-                .birthday(petCoreDto.getBirthday())
-                .weight(petCoreDto.getWeight())
-                .color(petCoreDto.getColor())
+                .name(petCoreDto.name())
+                .age(petCoreDto.age())
+                .birthday(petCoreDto.birthday())
+                .weight(petCoreDto.weight())
+                .color(petCoreDto.color())
                 .build();
     }
 
@@ -68,14 +68,12 @@ public class PetMapper {
                 .id(pet.getId())
                 .removed(pet.getRemoved())
                 .creationDate(pet.getCreationDate())
-                .name(petPutRequestJson.getName() != null ? petPutRequestJson.getName() : pet.getName())
-                .age(petPutRequestJson.getAge() != null ? petPutRequestJson.getAge() : pet.getAge())
-                .birthday(petPutRequestJson.getBirthday() != null ? LocalDate.parse(petPutRequestJson.getBirthday(), birthdayFormatter) : pet.getBirthday())
-                .weight(petPutRequestJson.getWeight() != null ? petPutRequestJson.getWeight() : pet.getWeight())
-                .color(petPutRequestJson.getColor() != null ? petPutRequestJson.getColor() : pet.getColor())
-                .mainImageUrl(petPutRequestJson.getMainImageUrl() != null ? petPutRequestJson.getMainImageUrl() : pet.getMainImageUrl())
+                .name(petPutRequestJson.name() != null ? petPutRequestJson.name() : pet.getName())
+                .age(petPutRequestJson.age() != null ? petPutRequestJson.age() : pet.getAge())
+                .birthday(petPutRequestJson.birthday() != null ? LocalDate.parse(petPutRequestJson.birthday(), birthdayFormatter) : pet.getBirthday())
+                .weight(petPutRequestJson.weight() != null ? petPutRequestJson.weight() : pet.getWeight())
+                .color(petPutRequestJson.color() != null ? petPutRequestJson.color() : pet.getColor())
+                .mainImageUrl(petPutRequestJson.mainImageUrl() != null ? petPutRequestJson.mainImageUrl() : pet.getMainImageUrl())
                 .build();
     }
-
-
 }

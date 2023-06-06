@@ -34,7 +34,6 @@ public class PetService {
 
     public List<Pet> listAll() {
         List<Pet> pets = petRepository.findAll();
-        log.info(pets);
         return pets;
     }
 
@@ -52,15 +51,17 @@ public class PetService {
     }
 
 
-    public void replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
+    public Pet replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
         Pet petFinded = checkPetExistence(id);
 
         Pet petUpdated = petMapper.petPutRequestToPet(petFinded, petPutRequestJson);
 
         petRepository.save(petUpdated);
+
+        return checkPetExistence(id);
     }
 
-    public void deletePet(UUID id) {
+    public String deletePet(UUID id) {
         Pet petFinded = checkPetExistence(id);
 
         Pet petRemoved = Pet.builder()
@@ -74,6 +75,8 @@ public class PetService {
                 .color(petFinded.getColor())
                 .build();
 
-        petRepository.save(petRemoved);
+        petRepository.save(petDeleted);
+
+        return petFinded.getName();
     }
 }
