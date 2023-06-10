@@ -6,6 +6,7 @@ import lombok.Builder;
 public record ProductPutRequestJson(
     String name,
     String description,
+    Double weight,
     String sku,
     String mainImageUrl,
     Boolean hasLocalAcquire

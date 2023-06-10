@@ -29,6 +29,9 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
+    @Column()
+    private Double weight;
+
     @Column(nullable = false)
     private String description;
 

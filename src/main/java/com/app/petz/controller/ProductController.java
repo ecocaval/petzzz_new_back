@@ -2,6 +2,7 @@ package com.app.petz.controller;
 
 import com.app.petz.core.requests.ProductPostRequestJson;
 import com.app.petz.core.requests.ProductPutRequestJson;
+import com.app.petz.core.responses.ProductGetResponseJson;
 import com.app.petz.core.responses.ProductPostResponseJson;
 import com.app.petz.mapper.ProductMapper;
 import com.app.petz.model.Product;
@@ -9,15 +10,13 @@ import com.app.petz.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
@@ -28,24 +27,27 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/product")
-    public ResponseEntity<ProductPostResponseJson> createProduct(@RequestBody @Valid ProductPostRequestJson productPostRequestJson){
+    public ResponseEntity<ProductPostResponseJson> createProduct(
+            @RequestBody @Valid ProductPostRequestJson productPostRequestJson
+    ){
         Product product = productService.createProduct(productPostRequestJson);
         return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.productToProductPostResponseJson(product));
     }
 
-    @GetMapping("/product")
-    public ResponseEntity<Page<Product>> listPageable(Pageable pageable){
-        return ResponseEntity.status(HttpStatus.OK).body(productService.listPageable(pageable));
-    }
-
     @GetMapping("/product/all")
-    public ResponseEntity<List<Product>> listAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(productService.listAllNonPageable());
+    public ResponseEntity<List<ProductGetResponseJson>> findAll(){
+        List<ProductGetResponseJson> products = productService.findAll()
+                .stream()
+                .map(productMapper::productToProductGetResponseJson)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<Product> findById(@PathVariable UUID id){
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
+    public ResponseEntity<ProductGetResponseJson> findById(@PathVariable UUID id){
+        ProductGetResponseJson product = productMapper.productToProductGetResponseJson(productService.findById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @PutMapping("/product/{id}")

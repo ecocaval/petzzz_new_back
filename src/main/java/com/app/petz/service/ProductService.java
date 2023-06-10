@@ -27,12 +27,8 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Page<Product> listPageable(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
-    public List<Product> listAllNonPageable(){
-        return productRepository.findAll();
+    public List<Product> findAll(){
+        return productRepository.findAllNotRemoved();
     }
 
     public Product findById(UUID id) {

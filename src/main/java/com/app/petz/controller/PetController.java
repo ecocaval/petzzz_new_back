@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -36,9 +37,13 @@ public class PetController {
     }
 
     @GetMapping("/pet/all")
-    public ResponseEntity<List<Pet>> listAll(){
+    public ResponseEntity<List<PetGetPutResponseJson>> listAll(){
+        var pets = petService.listAll()
+                             .stream()
+                             .map(petMapper::petToGetPutResponseJson)
+                             .toList();
         return ResponseEntity.status(HttpStatus.OK)
-                             .body(petService.listAll());
+                             .body(pets);
     }
 
     @GetMapping("/pet/{id}")
@@ -58,7 +63,7 @@ public class PetController {
     }
 
     @DeleteMapping("/pet/{id}")
-    public ResponseEntity<PetDeleteResponseJson>  deletePet(@PathVariable UUID id){
+    public ResponseEntity<PetDeleteResponseJson> deletePet(@PathVariable UUID id){
         String petName = petService.deletePet(id);
         return ResponseEntity.status(HttpStatus.OK)
                              .body(new PetDeleteResponseJson(petName));
