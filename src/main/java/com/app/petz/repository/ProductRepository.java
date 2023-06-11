@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-    @Query(value = "SELECT * FROM product WHERE removed = false", nativeQuery = true)
+    @Query(value = "SELECT * FROM product WHERE removed = false ORDER BY creation_date DESC", nativeQuery = true)
     List<Product> findAllNotRemoved();
 
     List<Product> findByName(String name);

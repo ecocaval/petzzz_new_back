@@ -2,10 +2,10 @@ package com.app.petz.controller;
 
 import com.app.petz.core.requests.ProductPostRequestJson;
 import com.app.petz.core.requests.ProductPutRequestJson;
-import com.app.petz.core.responses.ProductGetResponseJson;
+import com.app.petz.core.responses.PetDeleteResponseJson;
+import com.app.petz.core.responses.ProductDeleteResponseJson;
+import com.app.petz.core.responses.ProductGetPutResponseJson;
 import com.app.petz.core.responses.ProductPostResponseJson;
-import com.app.petz.mapper.ProductMapper;
-import com.app.petz.model.Product;
 import com.app.petz.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,49 +16,46 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class ProductController {
-    private final ProductMapper productMapper;
     private final ProductService productService;
 
-    @PostMapping("/product")
-    public ResponseEntity<ProductPostResponseJson> createProduct(
-            @RequestBody @Valid ProductPostRequestJson productPostRequestJson
-    ){
-        Product product = productService.createProduct(productPostRequestJson);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.productToProductPostResponseJson(product));
-    }
-
     @GetMapping("/product/all")
-    public ResponseEntity<List<ProductGetResponseJson>> findAll(){
-        List<ProductGetResponseJson> products = productService.findAll()
-                .stream()
-                .map(productMapper::productToProductGetResponseJson)
-                .collect(Collectors.toList());
-
+    public ResponseEntity<List<ProductGetPutResponseJson>> findAll() {
+        var products = productService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<ProductGetResponseJson> findById(@PathVariable UUID id){
-        ProductGetResponseJson product = productMapper.productToProductGetResponseJson(productService.findById(id));
+    public ResponseEntity<ProductGetPutResponseJson> findById(@PathVariable UUID id) {
+        var product = productService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
+    @PostMapping("/product")
+    public ResponseEntity<ProductPostResponseJson> create(
+            @RequestBody @Valid ProductPostRequestJson productPostRequestJson
+    ) {
+        var product = productService.create(productPostRequestJson);
+        return ResponseEntity.status(HttpStatus.CREATED).body(product);
+    }
+
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> replaceProduct(@PathVariable UUID id, @RequestBody ProductPutRequestJson productPutRequestJson){
-        productService.replaceProduct(id ,productPutRequestJson);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<ProductGetPutResponseJson> replace(
+            @PathVariable UUID id,
+            @RequestBody ProductPutRequestJson productPutRequestJson
+    ) {
+        var product = productService.replace(id, productPutRequestJson);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id){
-        productService.deleteProduct(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<ProductDeleteResponseJson> delete(@PathVariable UUID id) {
+        var productMainInfo = productService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(new ProductDeleteResponseJson(productMainInfo));
     }
 }

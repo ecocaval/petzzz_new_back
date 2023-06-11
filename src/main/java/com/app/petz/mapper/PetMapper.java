@@ -52,7 +52,6 @@ public class PetMapper {
     public PetGetPutResponseJson petToGetPutResponseJson(Pet pet){
         return PetGetPutResponseJson.builder()
                 .id(pet.getId())
-                .creationDate(pet.getCreationDate())
                 .name(pet.getName())
                 .age(pet.getAge())
                 .birthday(pet.getBirthday())

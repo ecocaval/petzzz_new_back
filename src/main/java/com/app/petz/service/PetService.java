@@ -3,10 +3,12 @@ package com.app.petz.service;
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetPutResponseJson;
+import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.exception.PetNotFoundException;
 import com.app.petz.mapper.PetMapper;
 import com.app.petz.model.Pet;
 import com.app.petz.repository.PetRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -15,67 +17,64 @@ import java.util.UUID;
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class PetService {
 
     private final PetMapper petMapper;
-
     private final PetRepository petRepository;
 
-    public PetService(PetMapper petMapper, PetRepository petRepository) {
-        this.petMapper = petMapper;
-        this.petRepository = petRepository;
+    public List<PetGetPutResponseJson> findAll() {
+        return petRepository.findAllNotRemoved()
+                .stream()
+                .map(petMapper::petToGetPutResponseJson)
+                .toList();
     }
 
-    public Pet createPet(PetPostRequestJson petPostRequestJson) {
-        Pet pet = petMapper.createRequestToPet(petPostRequestJson);
-        return petRepository.save(pet);
-    }
-
-    public List<Pet> listAll() {
-        List<Pet> pets = petRepository.findAll();
-        return pets;
-    }
-
-    public Pet checkPetExistence(UUID id){
-        Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new PetNotFoundException("Pet not found!"));
-        if(pet.getRemoved()) throw new PetNotFoundException("Pet deleted!");
-
-        return pet;
-    }
     public PetGetPutResponseJson findById(UUID id) {
         Pet pet = checkPetExistence(id);
 
         return petMapper.petToGetPutResponseJson(pet);
     }
 
+    public Pet checkPetExistence(UUID id){
+        Pet pet = petRepository.findById(id)
+                .orElseThrow(() -> new PetNotFoundException("O pet solicitado não foi encontrado!"));
+        if(pet.getRemoved()) throw new PetNotFoundException("O pet solicitado foi deletado!");
 
-    public PetGetPutResponseJson replacePet(UUID id, PetPutRequestJson petPutRequestJson) {
-        Pet petFinded = checkPetExistence(id);
+        return pet;
+    }
 
-        Pet petUpdated = petMapper.petPutRequestToPet(petFinded, petPutRequestJson);
+    public PetPostResponseJson create(PetPostRequestJson petPostRequestJson) {
+        Pet pet = petMapper.createRequestToPet(petPostRequestJson);
+        return petMapper.petToResponseJson(petRepository.save(pet));
+    }
+
+    public PetGetPutResponseJson replace(UUID id, PetPutRequestJson petPutRequestJson) {
+        Pet pet = checkPetExistence(id);
+
+        Pet petUpdated = petMapper.petPutRequestToPet(pet, petPutRequestJson);
 
         petRepository.save(petUpdated);
 
         return petMapper.petToGetPutResponseJson(checkPetExistence(id));
     }
 
-    public String deletePet(UUID id) {
-        Pet petFinded = checkPetExistence(id);
+    public String delete(UUID id) {
+        Pet pet = checkPetExistence(id);
 
         Pet petRemoved = Pet.builder()
                 .id(id)
-                .name(petFinded.getName())
-                .creationDate(petFinded.getCreationDate())
+                .name(pet.getName())
+                .creationDate(pet.getCreationDate())
                 .removed(true)
-                .age(petFinded.getAge())
-                .birthday(petFinded.getBirthday())
-                .weight(petFinded.getWeight())
-                .color(petFinded.getColor())
+                .age(pet.getAge())
+                .birthday(pet.getBirthday())
+                .weight(pet.getWeight())
+                .color(pet.getColor())
                 .build();
 
         petRepository.save(petRemoved);
 
-        return petFinded.getName();
+        return pet.getName();
     }
 }

@@ -1,8 +1,9 @@
 package com.app.petz.mapper;
 
+import com.app.petz.core.dto.ProductMainInfoDto;
 import com.app.petz.core.requests.ProductPostRequestJson;
 import com.app.petz.core.requests.ProductPutRequestJson;
-import com.app.petz.core.responses.ProductGetResponseJson;
+import com.app.petz.core.responses.ProductGetPutResponseJson;
 import com.app.petz.core.responses.ProductPostResponseJson;
 import com.app.petz.model.Product;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Component
 public class ProductMapper {
 
-    public Product productPostRequestJsonToProduct(ProductPostRequestJson productPostRequestJson) {
+    public Product postRequestJsonToProduct(ProductPostRequestJson productPostRequestJson) {
         return Product.builder()
                 .name(productPostRequestJson.name())
                 .removed(false)
@@ -24,7 +25,7 @@ public class ProductMapper {
                 .hasLocalAcquire(productPostRequestJson.hasLocalAcquire())
                 .build();
     }
-    public ProductPostResponseJson productToProductPostResponseJson(Product product) {
+    public ProductPostResponseJson productToPostResponseJson(Product product) {
         return ProductPostResponseJson.builder()
                 .timestamp(LocalDateTime.now())
                 .message("O produto '" + product.getName() + "' foi criado com sucesso!")
@@ -32,8 +33,15 @@ public class ProductMapper {
                 .build();
     }
 
-    public ProductGetResponseJson productToProductGetResponseJson(Product product) {
-        return ProductGetResponseJson.builder()
+    public ProductMainInfoDto productToMainInfoDto(Product product) {
+        return ProductMainInfoDto.builder()
+                .name(product.getName())
+                .sku(product.getSku())
+                .build();
+    }
+
+    public ProductGetPutResponseJson productToGetPutResponseJson(Product product) {
+        return ProductGetPutResponseJson.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
