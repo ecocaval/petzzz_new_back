@@ -2,7 +2,6 @@ package com.app.petz.controller;
 
 import com.app.petz.core.requests.ProductPostRequestJson;
 import com.app.petz.core.requests.ProductPutRequestJson;
-import com.app.petz.core.responses.PetDeleteResponseJson;
 import com.app.petz.core.responses.ProductDeleteResponseJson;
 import com.app.petz.core.responses.ProductGetPutResponseJson;
 import com.app.petz.core.responses.ProductPostResponseJson;

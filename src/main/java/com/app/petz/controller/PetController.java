@@ -48,7 +48,7 @@ public class PetController {
     public ResponseEntity<PetGetPutResponseJson> replace(
             @PathVariable UUID id,
             @RequestBody PetPutRequestJson petPutRequestJson) {
-        PetGetPutResponseJson pet = petService.replace(id, petPutRequestJson);
+        var pet = petService.replace(id, petPutRequestJson);
         return ResponseEntity.status(HttpStatus.OK).body(pet);
     }
 
