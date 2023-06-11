@@ -1,6 +1,5 @@
 package com.app.petz.mapper;
 
-import com.app.petz.core.dto.PetCoreDto;
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetPutResponseJson;
@@ -25,19 +24,6 @@ public class PetMapper {
                 .birthday(LocalDate.parse(createRequest.birthday(), birthdayFormatter))
                 .weight(createRequest.weight())
                 .color(createRequest.color())
-                .build();
-    }
-
-    public Pet petDtoToPet(PetCoreDto petCoreDto) {
-        return Pet.builder()
-                .id(petCoreDto.id())
-                .removed(false)
-                .creationDate(LocalDateTime.now())
-                .name(petCoreDto.name())
-                .age(petCoreDto.age())
-                .birthday(petCoreDto.birthday())
-                .weight(petCoreDto.weight())
-                .color(petCoreDto.color())
                 .build();
     }
 

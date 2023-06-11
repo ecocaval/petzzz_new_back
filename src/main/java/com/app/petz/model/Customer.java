@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -14,8 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "Product")
-public class Product {
+@Table(name = "Customer")
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -26,22 +27,21 @@ public class Product {
     @Column(nullable = false)
     private LocalDateTime creationDate = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 150)
     private String name;
 
-    @Column()
-    private Double weight;
+    @Column(nullable = false)
+    private LocalDate birthday;
+
+    @Column(nullable = false, length = 11, unique = true)
+    private String cpf;
+
+    @Column(nullable = false, length = 100, unique = true)
+    private String email;
 
     @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false, unique = true)
-    private String sku;
+    private String password;
 
     @Column()
     private String mainImageUrl;
-
-    @Column(nullable = false)
-    private Boolean hasLocalAcquire;
-
 }
