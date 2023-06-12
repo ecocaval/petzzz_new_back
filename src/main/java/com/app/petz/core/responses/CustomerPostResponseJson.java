@@ -1,14 +1,14 @@
 package com.app.petz.core.responses;
 
-import com.app.petz.model.Pet;
+import com.app.petz.model.Customer;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
 
 @Builder
-public record PetPostResponseJson(
+public record CustomerPostResponseJson(
     LocalDateTime timeStamp,
     String message,
-    Pet pet
+    Customer customer
 ) {
 }

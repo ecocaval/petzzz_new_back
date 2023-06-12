@@ -29,7 +29,7 @@ public class ProductMapper {
         return ProductPostResponseJson.builder()
                 .timestamp(LocalDateTime.now())
                 .message("O produto '" + product.getName() + "' foi criado com sucesso!")
-                .id(product.getId())
+                .product(product)
                 .build();
     }
 

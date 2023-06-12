@@ -24,12 +24,13 @@ public class PetMapper {
                 .birthday(LocalDate.parse(createRequest.birthday(), birthdayFormatter))
                 .weight(createRequest.weight())
                 .color(createRequest.color())
+                .mainImageUrl(createRequest.mainImageUrl())
                 .build();
     }
 
     public PetPostResponseJson petToResponseJson(Pet pet) {
         return PetPostResponseJson.builder()
-                .petUuid(pet.getId())
+                .pet(pet)
                 .message("O pet " + pet.getName() + " foi criado com sucesso.")
                 .timeStamp(LocalDateTime.now())
                 .build();
