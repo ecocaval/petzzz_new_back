@@ -40,21 +40,19 @@ class PetControllerTest {
         BDDMockito.when(petServiceMock.create(ArgumentMatchers.any(PetPostRequestJson.class)))
                 .thenReturn(PetCreator.createPetPostResponseJson());
 
-        BDDMockito.when(petMapperMock.createRequestToPet(ArgumentMatchers.any(PetPostRequestJson.class)))
-                .thenReturn(PetCreator.createValidPet());
-
-        BDDMockito.when(petMapperMock.petToPostResponseJson(ArgumentMatchers.any(Pet.class)))
-                .thenReturn(PetCreator.createPetPostResponseJson());
-
         BDDMockito.when(petServiceMock.findById(ArgumentMatchers.any(UUID.class)))
                 .thenReturn(PetCreator.createPetGetResponseJson());
 
-        BDDMockito.doNothing().when(petServiceMock).replace(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(PetPutRequestJson.class));
+        BDDMockito.when(petServiceMock.replace(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(PetPutRequestJson.class)))
+                .thenReturn(PetCreator.createValidUpdatedPet());
+
+        BDDMockito.when(petServiceMock.delete(ArgumentMatchers.any(UUID.class)))
+                .thenReturn(PetCreator.createPetDeleteResponseJson());
     }
 
     @Test
-    @DisplayName("createPet return PetPostResponseJson and status CREATED when successful")
-    void createPet_ReturnsPetToPetPostResponseJson_WhenSuccessful(){
+    @DisplayName("create return PetPostResponseJson and status CREATED when successful")
+    void create_ReturnsPetToPetPostResponseJson_WhenSuccessful(){
         PetPostRequestJson petPostRequestJson = PetCreator.createPetPostRequestJson();
 
         ResponseEntity<PetPostResponseJson> petCreated = this.petController.create(petPostRequestJson);
@@ -66,7 +64,7 @@ class PetControllerTest {
     }
 
     @Test
-    @DisplayName("findById return PetPostResponseJson when successul ")
+    @DisplayName("findById return PetGetResponseJson when successul ")
     void findById_ReturnsPetGetResponseJson_WhenSuccessul(){
         PetPostRequestJson petPostRequestJson = PetCreator.createPetPostRequestJson();
 
@@ -81,8 +79,8 @@ class PetControllerTest {
     }
 
     @Test
-    @DisplayName("replacePet update pet when successul")
-    void replacePet_UpdatesPet_WhenSuccessul(){
+    @DisplayName("replace update pet when successul")
+    void replace_UpdatesPet_WhenSuccessul(){
         Pet petToBeUpdated = PetCreator.createValidPet();
 
         PetPutRequestJson petPutRequestJson = PetCreator.createPetPutRequestJson();
@@ -96,12 +94,12 @@ class PetControllerTest {
                 .isNotNull();
 
         Assertions.assertThat(entity.getStatusCode())
-                .isEqualTo(HttpStatus.NO_CONTENT);
+                .isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    @DisplayName("deletePet update pet removed atribute when successul")
-    void deletePet_UpdatesPetRemovedAtt_WhenSuccessul(){
+    @DisplayName("delete update pet removed atribute when successul")
+    void delete_UpdatesPetRemovedAtt_WhenSuccessul(){
         Pet petToBeDeleted = PetCreator.createValidPet();
 
         Assertions.assertThatCode(() -> petController.delete(petToBeDeleted.getId()))
@@ -113,7 +111,7 @@ class PetControllerTest {
                 .isNotNull();
 
         Assertions.assertThat(entity.getStatusCode())
-                .isEqualTo(HttpStatus.NO_CONTENT);
+                .isEqualTo(HttpStatus.OK);
 
     }
 
