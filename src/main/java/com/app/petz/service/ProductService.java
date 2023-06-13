@@ -47,6 +47,11 @@ public class ProductService {
     }
 
     public ProductPostResponseJson create(ProductPostRequestJson productPostRequestJson) {
+
+        if(productPostRequestJson.sizes() != null) {
+            String[] productSizes = productPostRequestJson.sizes().split(",");
+        }
+
         Product product = productMapper.postRequestJsonToProduct(productPostRequestJson);
 
         return productMapper.productToPostResponseJson(productRepository.save(product));
