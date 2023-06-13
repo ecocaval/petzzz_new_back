@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Builder
-public record PetGetPutResponseJson(
+public record PetGetResponseJson(
     UUID id,
     String name,
     Integer age,

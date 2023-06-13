@@ -1,7 +1,8 @@
 package com.app.petz.service;
 
 import com.app.petz.core.requests.PetPostRequestJson;
-import com.app.petz.core.responses.PetGetPutResponseJson;
+import com.app.petz.core.responses.PetGetResponseJson;
+import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.exception.PetNotFoundException;
 import com.app.petz.factory.PetCreator;
 import com.app.petz.mapper.PetMapper;
@@ -37,8 +38,10 @@ public class PetServiceTest {
                 .thenReturn(PetCreator.createValidPet());
         BDDMockito.when(petMapperMock.createRequestToPet(ArgumentMatchers.any(PetPostRequestJson.class)))
                         .thenReturn(PetCreator.createValidPet());
+        BDDMockito.when(petMapperMock.petToPostResponseJson(ArgumentMatchers.any(Pet.class)))
+                        .thenReturn((PetCreator.createPetPostResponseJson()));
 
-        BDDMockito.when(petMapperMock.petToGetPutResponseJson(ArgumentMatchers.any(Pet.class)))
+        BDDMockito.when(petMapperMock.petToGetResponseJson(ArgumentMatchers.any(Pet.class)))
                         .thenReturn(PetCreator.createPetGetResponseJson());
 
         BDDMockito.when(petRepositoryMock.findById(ArgumentMatchers.any(UUID.class)))
@@ -51,12 +54,12 @@ public class PetServiceTest {
     void createPet_ReturnsPet_WhenSuccessful(){
         UUID expectedId = PetCreator.createValidPet().getId();
 
-        Pet petCreated = petService.createPet(PetCreator.createPetPostRequestJson());
+        PetPostResponseJson petCreated = petService.create(PetCreator.createPetPostRequestJson());
 
         Assertions.assertThat(petCreated)
                 .isNotNull();
 
-        Assertions.assertThat(petCreated.getId())
+        Assertions.assertThat(petCreated.pet().getId())
                 .isEqualTo(expectedId);
     }
 
@@ -65,7 +68,7 @@ public class PetServiceTest {
     void findById_ReturnsPetGetResponseJson_WhenSuccessul(){
         UUID expectedId = PetCreator.createPetGetResponseJson().id();
 
-        PetGetPutResponseJson petFinded = petService.findById(expectedId);
+        PetGetResponseJson petFinded = petService.findById(expectedId);
 
 
         Assertions.assertThat(petFinded)
@@ -88,14 +91,14 @@ public class PetServiceTest {
     @Test
     @DisplayName("replacePet update pet when successul")
     void replacePet_UpdatesPet_WhenSuccessul(){
-        Assertions.assertThatCode(() -> petService.replacePet(PetCreator.createValidPet().getId(), PetCreator.createPetPutRequestJson()))
+        Assertions.assertThatCode(() -> petService.replace(PetCreator.createValidPet().getId(), PetCreator.createPetPutRequestJson()))
                 .doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("deletePet update pet removed atribute when successul")
     void deletePet_UpdatesPetRemovedAtt_WhenSuccessul(){
-        Assertions.assertThatCode(() -> petService.deletePet(PetCreator.createValidPet().getId()))
+        Assertions.assertThatCode(() -> petService.delete(PetCreator.createValidPet().getId()))
                 .doesNotThrowAnyException();
 
 

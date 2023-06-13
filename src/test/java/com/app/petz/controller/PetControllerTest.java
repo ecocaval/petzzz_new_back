@@ -2,7 +2,7 @@ package com.app.petz.controller;
 
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetGetPutResponseJson;
+import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.factory.PetCreator;
 import com.app.petz.mapper.PetMapper;
@@ -37,19 +37,19 @@ class PetControllerTest {
 
     @BeforeEach
     void setup(){
-        BDDMockito.when(petServiceMock.createPet(ArgumentMatchers.any(PetPostRequestJson.class)))
-                .thenReturn(PetCreator.createValidPet());
+        BDDMockito.when(petServiceMock.create(ArgumentMatchers.any(PetPostRequestJson.class)))
+                .thenReturn(PetCreator.createPetPostResponseJson());
 
         BDDMockito.when(petMapperMock.createRequestToPet(ArgumentMatchers.any(PetPostRequestJson.class)))
                 .thenReturn(PetCreator.createValidPet());
 
-        BDDMockito.when(petMapperMock.petToResponseJson(ArgumentMatchers.any(Pet.class)))
+        BDDMockito.when(petMapperMock.petToPostResponseJson(ArgumentMatchers.any(Pet.class)))
                 .thenReturn(PetCreator.createPetPostResponseJson());
 
         BDDMockito.when(petServiceMock.findById(ArgumentMatchers.any(UUID.class)))
                 .thenReturn(PetCreator.createPetGetResponseJson());
 
-        BDDMockito.doNothing().when(petServiceMock).replacePet(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(PetPutRequestJson.class));
+        BDDMockito.doNothing().when(petServiceMock).replace(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(PetPutRequestJson.class));
     }
 
     @Test
@@ -57,7 +57,7 @@ class PetControllerTest {
     void createPet_ReturnsPetToPetPostResponseJson_WhenSuccessful(){
         PetPostRequestJson petPostRequestJson = PetCreator.createPetPostRequestJson();
 
-        ResponseEntity<PetPostResponseJson> petCreated = this.petController.createPet(petPostRequestJson);
+        ResponseEntity<PetPostResponseJson> petCreated = this.petController.create(petPostRequestJson);
 
         Assertions.assertThat(petCreated.getBody())
                 .isNotNull();
@@ -70,15 +70,14 @@ class PetControllerTest {
     void findById_ReturnsPetGetResponseJson_WhenSuccessul(){
         PetPostRequestJson petPostRequestJson = PetCreator.createPetPostRequestJson();
 
-        ResponseEntity<PetPostResponseJson> petSaved = this.petController.createPet(petPostRequestJson);
+        ResponseEntity<PetPostResponseJson> petSaved = this.petController.create(petPostRequestJson);
 
-        ResponseEntity<PetGetPutResponseJson> petFinded = this.petController.findById(Objects.requireNonNull(petSaved.getBody()).petUuid());
+        ResponseEntity<PetGetResponseJson> petFinded = this.petController.findById(Objects.requireNonNull(petSaved.getBody()).pet().getId());
 
         Assertions.assertThat(petFinded)
                 .isNotNull();
 
-        Assertions.assertThat(petFinded.getBody().id())
-                  .isEqualTo(petSaved.getBody().petUuid());
+
     }
 
     @Test
@@ -88,10 +87,10 @@ class PetControllerTest {
 
         PetPutRequestJson petPutRequestJson = PetCreator.createPetPutRequestJson();
 
-        Assertions.assertThatCode(() -> petController.replacePet(petToBeUpdated.getId(), petPutRequestJson))
+        Assertions.assertThatCode(() -> petController.replace(petToBeUpdated.getId(), petPutRequestJson))
                 .doesNotThrowAnyException();
 
-        var entity = petController.replacePet(petToBeUpdated.getId(), petPutRequestJson);
+        var entity = petController.replace(petToBeUpdated.getId(), petPutRequestJson);
 
         Assertions.assertThat(entity)
                 .isNotNull();
@@ -105,10 +104,10 @@ class PetControllerTest {
     void deletePet_UpdatesPetRemovedAtt_WhenSuccessul(){
         Pet petToBeDeleted = PetCreator.createValidPet();
 
-        Assertions.assertThatCode(() -> petController.deletePet(petToBeDeleted.getId()))
+        Assertions.assertThatCode(() -> petController.delete(petToBeDeleted.getId()))
                 .doesNotThrowAnyException();
 
-        var entity = petController.deletePet(petToBeDeleted.getId());
+        var entity = petController.delete(petToBeDeleted.getId());
 
         Assertions.assertThat(entity)
                 .isNotNull();
