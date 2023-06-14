@@ -3,7 +3,7 @@ package com.app.petz.controller;
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetDeleteResponseJson;
-import com.app.petz.core.responses.PetGetPutResponseJson;
+import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.service.PetService;
 import jakarta.validation.Valid;
@@ -25,13 +25,13 @@ public class PetController {
     private final PetService petService;
 
     @GetMapping("/pet/all")
-    public ResponseEntity<List<PetGetPutResponseJson>> findAll() {
+    public ResponseEntity<List<PetGetResponseJson>> findAll() {
         var pets = petService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(pets);
     }
 
     @GetMapping("/pet/{id}")
-    public ResponseEntity<PetGetPutResponseJson> findById(@PathVariable UUID id) {
+    public ResponseEntity<PetGetResponseJson> findById(@PathVariable UUID id) {
         var pet = petService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(pet);
     }
@@ -45,7 +45,7 @@ public class PetController {
     }
 
     @PutMapping("/pet/{id}")
-    public ResponseEntity<PetGetPutResponseJson> replace(
+    public ResponseEntity<PetGetResponseJson> replace(
             @PathVariable UUID id,
             @RequestBody PetPutRequestJson petPutRequestJson) {
         var pet = petService.replace(id, petPutRequestJson);

@@ -2,7 +2,7 @@ package com.app.petz.service;
 
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetGetPutResponseJson;
+import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.exception.PetNotFoundException;
 import com.app.petz.mapper.PetMapper;
@@ -23,17 +23,17 @@ public class PetService {
     private final PetMapper petMapper;
     private final PetRepository petRepository;
 
-    public List<PetGetPutResponseJson> findAll() {
+    public List<PetGetResponseJson> findAll() {
         return petRepository.findAllNotRemoved()
                 .stream()
-                .map(petMapper::petToGetPutResponseJson)
+                .map(petMapper::petToGetResponseJson)
                 .toList();
     }
 
-    public PetGetPutResponseJson findById(UUID id) {
+    public PetGetResponseJson findById(UUID id) {
         Pet pet = checkPetExistence(id);
 
-        return petMapper.petToGetPutResponseJson(pet);
+        return petMapper.petToGetResponseJson(pet);
     }
 
     public Pet checkPetExistence(UUID id){
@@ -46,17 +46,17 @@ public class PetService {
 
     public PetPostResponseJson create(PetPostRequestJson petPostRequestJson) {
         Pet pet = petMapper.createRequestToPet(petPostRequestJson);
-        return petMapper.petToResponseJson(petRepository.save(pet));
+        return petMapper.petToPostResponseJson(petRepository.save(pet));
     }
 
-    public PetGetPutResponseJson replace(UUID id, PetPutRequestJson petPutRequestJson) {
+    public PetGetResponseJson replace(UUID id, PetPutRequestJson petPutRequestJson) {
         Pet pet = checkPetExistence(id);
 
         Pet petUpdated = petMapper.petPutRequestToPet(pet, petPutRequestJson);
 
         petRepository.save(petUpdated);
 
-        return petMapper.petToGetPutResponseJson(checkPetExistence(id));
+        return petMapper.petToGetResponseJson(checkPetExistence(id));
     }
 
     public String delete(UUID id) {

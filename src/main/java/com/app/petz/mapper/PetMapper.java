@@ -2,7 +2,7 @@ package com.app.petz.mapper;
 
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetGetPutResponseJson;
+import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.model.Pet;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class PetMapper {
                 .build();
     }
 
-    public PetPostResponseJson petToResponseJson(Pet pet) {
+    public PetPostResponseJson petToPostResponseJson(Pet pet) {
         return PetPostResponseJson.builder()
                 .pet(pet)
                 .message("O pet " + pet.getName() + " foi criado com sucesso.")
@@ -36,8 +36,8 @@ public class PetMapper {
                 .build();
     }
 
-    public PetGetPutResponseJson petToGetPutResponseJson(Pet pet){
-        return PetGetPutResponseJson.builder()
+    public PetGetResponseJson petToGetResponseJson(Pet pet){
+        return PetGetResponseJson.builder()
                 .id(pet.getId())
                 .name(pet.getName())
                 .age(pet.getAge())

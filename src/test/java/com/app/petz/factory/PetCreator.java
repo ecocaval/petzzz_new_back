@@ -2,7 +2,8 @@ package com.app.petz.factory;
 
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
-import com.app.petz.core.responses.PetGetPutResponseJson;
+import com.app.petz.core.responses.PetDeleteResponseJson;
+import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.model.Pet;
 
@@ -39,16 +40,14 @@ public class PetCreator {
                 .build();
     }
 
-    public static Pet createValidUpdatedPet(){
-        return Pet.builder()
+    public static PetGetResponseJson createValidUpdatedPet(){
+        return PetGetResponseJson.builder()
                 .id(UUID.fromString("b2664036-fe96-11ed-be56-0242ac120002"))
                 .name("Doguinho Atualizado")
                 .age(8)
-                .creationDate(LocalDateTime.now())
-                .removed(false)
-                .color("Caramelo Claro")
-                .weight(18.0)
                 .birthday(LocalDate.parse("28/03/2018", DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .weight(18.0)
+                .color("Caramelo Claro")
                 .mainImageUrl("http://")
                 .build();
     }
@@ -65,16 +64,15 @@ public class PetCreator {
 
     public static PetPostResponseJson createPetPostResponseJson(){
         return PetPostResponseJson.builder()
-                .petUuid(UUID.fromString("b2664036-fe96-11ed-be56-0242ac120002"))
+                .pet(createValidPet())
                 .timeStamp(LocalDateTime.now())
                 .message("O pet Doguinho da request foi criado com sucesso.")
                 .build();
     }
 
-    public static PetGetPutResponseJson createPetGetResponseJson() {
-        return PetGetPutResponseJson.builder()
+    public static PetGetResponseJson createPetGetResponseJson() {
+        return PetGetResponseJson.builder()
                 .id(UUID.fromString("b2664036-fe96-11ed-be56-0242ac120002"))
-                .creationDate(LocalDateTime.now())
                 .name("Doguinho")
                 .age(6)
                 .birthday(LocalDate.parse("28/03/2018", DateTimeFormatter.ofPattern("dd/MM/yyyy")))
@@ -93,5 +91,9 @@ public class PetCreator {
                 .color("Caramelo")
                 .mainImageUrl("http://")
                 .build();
+    }
+
+    public static String createPetDeleteResponseJson() {
+        return new PetDeleteResponseJson("Doguinho").message();
     }
 }
