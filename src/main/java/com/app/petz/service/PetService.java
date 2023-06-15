@@ -11,6 +11,7 @@ import com.app.petz.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,11 +45,13 @@ public class PetService {
         return pet;
     }
 
+    @Transactional
     public PetPostResponseJson create(PetPostRequestJson petPostRequestJson) {
         Pet pet = petMapper.createRequestToPet(petPostRequestJson);
         return petMapper.petToPostResponseJson(petRepository.save(pet));
     }
 
+    @Transactional
     public PetGetResponseJson replace(UUID id, PetPutRequestJson petPutRequestJson) {
         Pet pet = checkPetExistence(id);
 
@@ -59,6 +62,7 @@ public class PetService {
         return petMapper.petToGetResponseJson(checkPetExistence(id));
     }
 
+    @Transactional
     public String delete(UUID id) {
         Pet pet = checkPetExistence(id);
 

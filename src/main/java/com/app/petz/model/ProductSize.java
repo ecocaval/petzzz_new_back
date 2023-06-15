@@ -34,7 +34,6 @@ public class ProductSize {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Id
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProductSizes size;
