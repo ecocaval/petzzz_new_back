@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class ProductSizeId implements Serializable {
     private UUID id;
-    private UUID product;
+    private UUID productId;
     private ProductSizes size;
 }
 

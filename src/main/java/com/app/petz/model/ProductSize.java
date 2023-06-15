@@ -32,7 +32,7 @@ public class ProductSize {
     @Id
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private UUID productId;
 
     @Id
     @Enumerated(EnumType.STRING)
