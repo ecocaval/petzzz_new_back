@@ -5,6 +5,7 @@ import com.app.petz.core.requests.ProductPostRequestJson;
 import com.app.petz.core.requests.ProductPutRequestJson;
 import com.app.petz.core.responses.ProductGetPutResponseJson;
 import com.app.petz.core.responses.ProductPostResponseJson;
+import com.app.petz.core.responses.ProductSizesGetResponseJson;
 import com.app.petz.enums.ProductSizes;
 import com.app.petz.exception.ProductNotFoundException;
 import com.app.petz.mapper.ProductMapper;
@@ -41,9 +42,19 @@ public class ProductService {
     }
 
     public ProductGetPutResponseJson findById(UUID id) {
-        var product = checkProductExistenceById(id);
+        Product product = checkProductExistenceById(id);
 
         return productMapper.productToGetPutResponseJson(product);
+    }
+
+    public ProductSizesGetResponseJson findProductSizesById(UUID id) {
+        List<ProductSize> productSizes = productSizeRepository.findAllByProductId(id);
+
+        if(productSizes.isEmpty()) {
+            throw new ProductNotFoundException("O produto solicitado não possui tamanhos cadastrados!");
+        }
+
+        return productSizeMapper.productModelToGetResponseJson(productSizes);
     }
 
     public Product checkProductExistenceById(UUID id) {
