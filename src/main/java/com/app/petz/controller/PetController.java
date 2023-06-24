@@ -19,24 +19,24 @@ import java.util.UUID;
 @Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/pet")
 public class PetController {
 
     private final PetService petService;
 
-    @GetMapping("/pet/all")
+    @GetMapping("/all")
     public ResponseEntity<List<PetGetResponseJson>> findAll() {
         var pets = petService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(pets);
     }
 
-    @GetMapping("/pet/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PetGetResponseJson> findById(@PathVariable UUID id) {
         var pet = petService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(pet);
     }
 
-    @PostMapping("/pet")
+    @PostMapping("/")
     public ResponseEntity<PetPostResponseJson> create(
             @RequestBody @Valid PetPostRequestJson petPostRequestJson
     ) {
@@ -44,7 +44,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pet);
     }
 
-    @PutMapping("/pet/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PetGetResponseJson> replace(
             @PathVariable UUID id,
             @RequestBody PetPutRequestJson petPutRequestJson) {
@@ -52,7 +52,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.OK).body(pet);
     }
 
-    @DeleteMapping("/pet/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<PetDeleteResponseJson> delete(@PathVariable UUID id) {
         String petName = petService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new PetDeleteResponseJson(petName));
