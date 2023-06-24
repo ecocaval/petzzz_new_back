@@ -35,7 +35,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<ProductPostResponseJson> create(
             @RequestBody @Valid ProductPostRequestJson productPostRequestJson
     ) {

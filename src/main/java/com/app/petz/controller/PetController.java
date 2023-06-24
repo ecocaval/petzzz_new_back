@@ -36,7 +36,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.OK).body(pet);
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<PetPostResponseJson> create(
             @RequestBody @Valid PetPostRequestJson petPostRequestJson
     ) {
