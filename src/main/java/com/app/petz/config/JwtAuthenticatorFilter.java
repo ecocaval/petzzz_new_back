@@ -22,7 +22,7 @@ import java.io.IOException;
 public class JwtAuthenticatorFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
