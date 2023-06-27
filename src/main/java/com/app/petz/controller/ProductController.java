@@ -2,9 +2,7 @@ package com.app.petz.controller;
 
 import com.app.petz.core.requests.ProductPostRequestJson;
 import com.app.petz.core.requests.ProductPutRequestJson;
-import com.app.petz.core.responses.ProductDeleteResponseJson;
-import com.app.petz.core.responses.ProductGetPutResponseJson;
-import com.app.petz.core.responses.ProductPostResponseJson;
+import com.app.petz.core.responses.*;
 import com.app.petz.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
 public class ProductController {
+
     private final ProductService productService;
 
     @GetMapping("/all")
@@ -35,7 +34,13 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
-    @PostMapping
+    @GetMapping("/sizes/{productId}")
+    public ResponseEntity<ProductSizesGetResponseJson> findProductSizesByProductId(@PathVariable UUID productId) {
+        var productSizes = productService.findProductSizesById(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(productSizes);
+    }
+
+    @PostMapping()
     public ResponseEntity<ProductPostResponseJson> create(
             @RequestBody @Valid ProductPostRequestJson productPostRequestJson
     ) {
