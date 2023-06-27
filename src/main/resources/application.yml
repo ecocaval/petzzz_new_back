@@ -1,0 +1,20 @@
+server:
+  port: 9000
+  error:
+    include-stacktrace: on_param
+
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-ch895aesi8uhth5qr77g-a.oregon-postgres.render.com:5432/petzzz
+    username: ${DB_USERNAME:petzzz_user}
+    password: ${DB_PASSWORD:mvQ2h7AWb8SC6KtSZMxAtDrVflynBYnZ}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      hibernate.jdbc.lob.non_contextual_creation: true
+
+jwt:
+  secretKey: g/yu7/LkjqUDOfE2TjdX4nh2WfOMEuAaNETIcTDOXaGmizl/8AD6qr8gNJIboevetNxaWnQR6pAqeLLt+AjwTnWazJRDZPuge39cjJIPRigevAcsTOfAxFLTA45pYqyzUaBckvr69WaNX+7sG5HLUL9OwUM0MNSo8PFkxwDqJey9wA3hC3cA/9Q9J39lwQkY+9qiEKFClBMtFcRjen+dW1flf+q9WGsSCiLxZDEqKBGf/WVR59zUI/JLTrnRXzfpt2H9p3IOdSD3SPWyJ6wW6DWo5KYdbE/R1hPzbblp
