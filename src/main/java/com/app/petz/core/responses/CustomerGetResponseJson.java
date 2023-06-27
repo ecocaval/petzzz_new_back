@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Builder
-public record CustomerGetPutResponseJson(
+public record CustomerGetResponseJson(
     UUID id,
     String name,
     LocalDate birthday,

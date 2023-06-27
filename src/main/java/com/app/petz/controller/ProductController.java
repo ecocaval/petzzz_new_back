@@ -19,23 +19,23 @@ import java.util.UUID;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/product")
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/product/all")
+    @GetMapping("/all")
     public ResponseEntity<List<ProductGetPutResponseJson>> findAll() {
         var products = productService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ProductGetPutResponseJson> findById(@PathVariable UUID id) {
         var product = productService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
-    @PostMapping("/product")
+    @PostMapping
     public ResponseEntity<ProductPostResponseJson> create(
             @RequestBody @Valid ProductPostRequestJson productPostRequestJson
     ) {
@@ -43,7 +43,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ProductGetPutResponseJson> replace(
             @PathVariable UUID id,
             @RequestBody ProductPutRequestJson productPutRequestJson
@@ -52,7 +52,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ProductDeleteResponseJson> delete(@PathVariable UUID id) {
         var productMainInfo = productService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new ProductDeleteResponseJson(productMainInfo));
