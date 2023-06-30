@@ -2,6 +2,7 @@ package com.app.petz.mapper;
 
 import com.app.petz.core.requests.RegisterRequest;
 import com.app.petz.core.responses.AuthenticationResponseJson;
+import com.app.petz.core.utils.CpfValidator;
 import com.app.petz.model.Customer;
 import com.app.petz.model.Role;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 public class CustomerMapper {
     private final DateTimeFormatter birthdayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final PasswordEncoder passwordEncoder;
+    private final CpfValidator cpfValidator;
 
     public Customer registerRequestToCustomer(RegisterRequest createRequest){
         return Customer.builder()
@@ -24,7 +26,7 @@ public class CustomerMapper {
                 .removed(false)
                 .creationDate(LocalDateTime.now())
                 .birthday(LocalDate.parse(createRequest.birthday(), birthdayFormatter))
-                .cpf(createRequest.cpf())
+                .cpf(cpfValidator.cleanCpfCharacter(createRequest.cpf()))
                 .email(createRequest.email())
                 .password(passwordEncoder.encode(createRequest.password()))
                 .mainImageUrl(createRequest.mainImageUrl())
