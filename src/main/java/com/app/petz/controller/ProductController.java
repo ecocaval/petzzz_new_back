@@ -1,5 +1,6 @@
 package com.app.petz.controller;
 
+import com.app.petz.core.dto.ProductMainInfoDto;
 import com.app.petz.core.requests.ProductPostRequestJson;
 import com.app.petz.core.requests.ProductPutRequestJson;
 import com.app.petz.core.responses.*;
@@ -24,19 +25,19 @@ public class ProductController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ProductGetPutResponseJson>> findAll() {
-        var products = productService.findAll();
+        List<ProductGetPutResponseJson> products = productService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductGetPutResponseJson> findById(@PathVariable UUID id) {
-        var product = productService.findById(id);
+        ProductGetPutResponseJson product = productService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @GetMapping("/sizes/{productId}")
     public ResponseEntity<ProductSizesGetResponseJson> findProductSizesByProductId(@PathVariable UUID productId) {
-        var productSizes = productService.findProductSizesById(productId);
+        ProductSizesGetResponseJson productSizes = productService.findProductSizesById(productId);
         return ResponseEntity.status(HttpStatus.OK).body(productSizes);
     }
 
@@ -44,7 +45,7 @@ public class ProductController {
     public ResponseEntity<ProductPostResponseJson> create(
             @RequestBody @Valid ProductPostRequestJson productPostRequestJson
     ) {
-        var product = productService.create(productPostRequestJson);
+        ProductPostResponseJson product = productService.create(productPostRequestJson);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
@@ -53,13 +54,13 @@ public class ProductController {
             @PathVariable UUID id,
             @RequestBody ProductPutRequestJson productPutRequestJson
     ) {
-        var product = productService.replace(id, productPutRequestJson);
+        ProductGetPutResponseJson product = productService.replace(id, productPutRequestJson);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDeleteResponseJson> delete(@PathVariable UUID id) {
-        var productMainInfo = productService.delete(id);
+        ProductMainInfoDto productMainInfo = productService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new ProductDeleteResponseJson(productMainInfo));
     }
 }

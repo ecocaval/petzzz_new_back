@@ -2,6 +2,7 @@ package com.app.petz.controller;
 
 import com.app.petz.core.requests.PetPostRequestJson;
 import com.app.petz.core.requests.PetPutRequestJson;
+import com.app.petz.core.responses.PetDeleteResponseJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.factory.PetCreator;
@@ -88,7 +89,8 @@ class PetControllerTest {
         Assertions.assertThatCode(() -> petController.replace(petToBeUpdated.getId(), petPutRequestJson))
                 .doesNotThrowAnyException();
 
-        var entity = petController.replace(petToBeUpdated.getId(), petPutRequestJson);
+
+        ResponseEntity<PetGetResponseJson> entity = petController.replace(petToBeUpdated.getId(), petPutRequestJson);
 
         Assertions.assertThat(entity)
                 .isNotNull();
@@ -105,7 +107,8 @@ class PetControllerTest {
         Assertions.assertThatCode(() -> petController.delete(petToBeDeleted.getId()))
                 .doesNotThrowAnyException();
 
-        var entity = petController.delete(petToBeDeleted.getId());
+
+        ResponseEntity<PetDeleteResponseJson> entity = petController.delete(petToBeDeleted.getId());
 
         Assertions.assertThat(entity)
                 .isNotNull();

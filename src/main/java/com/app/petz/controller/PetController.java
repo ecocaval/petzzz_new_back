@@ -26,13 +26,13 @@ public class PetController {
 
     @GetMapping("/all")
     public ResponseEntity<List<PetGetResponseJson>> findAll() {
-        var pets = petService.findAll();
+        List<PetGetResponseJson> pets = petService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(pets);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PetGetResponseJson> findById(@PathVariable UUID id) {
-        var pet = petService.findById(id);
+        PetGetResponseJson pet = petService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(pet);
     }
 
@@ -40,7 +40,7 @@ public class PetController {
     public ResponseEntity<PetPostResponseJson> create(
             @RequestBody @Valid PetPostRequestJson petPostRequestJson
     ) {
-        var pet = petService.create(petPostRequestJson);
+        PetPostResponseJson pet = petService.create(petPostRequestJson);
         return ResponseEntity.status(HttpStatus.CREATED).body(pet);
     }
 
@@ -48,7 +48,7 @@ public class PetController {
     public ResponseEntity<PetGetResponseJson> replace(
             @PathVariable UUID id,
             @RequestBody PetPutRequestJson petPutRequestJson) {
-        var pet = petService.replace(id, petPutRequestJson);
+        PetGetResponseJson pet = petService.replace(id, petPutRequestJson);
         return ResponseEntity.status(HttpStatus.OK).body(pet);
     }
 
