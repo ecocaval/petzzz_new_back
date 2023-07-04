@@ -23,7 +23,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseJson> create(
             @RequestBody @Valid RegisterRequest request){
-        var customer = authService.create(request);
+        AuthenticationResponseJson customer = authService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(customer);
     }
 
@@ -31,7 +31,7 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponseJson> authenticate(
             @RequestBody @Valid AuthenticationRequestJson request
             ){
-        var customer = authService.authenticate(request);
+        AuthenticationResponseJson customer = authService.authenticate(request);
         return ResponseEntity.status(HttpStatus.OK).body(customer);
     }
 }

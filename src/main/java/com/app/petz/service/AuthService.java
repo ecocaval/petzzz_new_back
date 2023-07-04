@@ -3,6 +3,10 @@ package com.app.petz.service;
 import com.app.petz.core.requests.AuthenticationRequestJson;
 import com.app.petz.core.requests.RegisterRequest;
 import com.app.petz.core.responses.AuthenticationResponseJson;
+import com.app.petz.core.utils.CpfValidator;
+import com.app.petz.exception.DuplicatedEmailCpfException;
+import com.app.petz.exception.InvalidCpfException;
+import com.app.petz.exception.messages.ErrorMessages;
 import com.app.petz.mapper.CustomerMapper;
 import com.app.petz.model.Customer;
 import com.app.petz.repository.CustomerRepository;
@@ -20,12 +24,36 @@ public class AuthService {
     private final CustomerMapper customerMapper;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final CpfValidator cpfValidator;
 
     @Transactional
     public AuthenticationResponseJson create(RegisterRequest registerRequest) {
+        boolean emailIsInUse = customerRepository.findByEmail(registerRequest.email()).isPresent();
+        boolean cpfIsInUse = customerRepository.findByCpf(registerRequest.cpf()).isPresent();
+
+        boolean cpfIsValid = cpfValidator.validateCpf(registerRequest.cpf());
+
+        if (emailIsInUse || cpfIsInUse) {
+            String errorMessage = emailIsInUse && cpfIsInUse
+                    ? ErrorMessages.EMAIL_AND_CPF_ARE_ALREADY_IN_USE.getErrorMessage()
+                    : cpfIsInUse ?
+                    ErrorMessages.CPF_IS_ALREADY_IN_USE.getErrorMessage() :
+                    ErrorMessages.EMAIL_IS_ALREADY_IN_USE.getErrorMessage();
+
+            throw new DuplicatedEmailCpfException(
+                    errorMessage,
+                    registerRequest.email(),
+                    registerRequest.cpf()
+            );
+        }
+
+        if(!cpfIsValid) {
+            throw new InvalidCpfException(ErrorMessages.INVALID_CPF.getErrorMessage(), registerRequest.cpf());
+        }
+
         Customer customer = customerMapper.registerRequestToCustomer(registerRequest);
         customerRepository.save(customer);
-        var jwtToken = jwtService.generateToken(customer);
+        String jwtToken = jwtService.generateToken(customer);
         return customerMapper.CustomerToAuthResponseJson(customer, jwtToken);
     }
 
@@ -36,9 +64,9 @@ public class AuthService {
                         request.password()
                 )
         );
-        var customer = customerRepository.findByEmail(request.email())
+        Customer customer = customerRepository.findByEmail(request.email())
                 .orElseThrow(); //todo UserNotFoundException
-        var jwtToken = jwtService.generateToken(customer);
+        String jwtToken = jwtService.generateToken(customer);
         return customerMapper.CustomerToAuthResponseJson(customer, jwtToken);
     }
 }
