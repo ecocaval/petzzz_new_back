@@ -5,7 +5,6 @@ import com.app.petz.core.requests.PetPutRequestJson;
 import com.app.petz.core.responses.PetGetResponseJson;
 import com.app.petz.core.responses.PetPostResponseJson;
 import com.app.petz.exception.PetNotFoundException;
-import com.app.petz.mapper.PetMapper;
 import com.app.petz.model.Pet;
 import com.app.petz.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,20 +21,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PetService {
 
-    private final PetMapper petMapper;
     private final PetRepository petRepository;
+    private final DateTimeFormatter birthdayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public List<PetGetResponseJson> findAll() {
         return petRepository.findAllNotRemoved()
                 .stream()
-                .map(petMapper::petToGetResponseJson)
+                .map(Pet::toGetResponseJson)
                 .toList();
     }
 
     public PetGetResponseJson findById(UUID id) {
         Pet pet = checkPetExistence(id);
 
-        return petMapper.petToGetResponseJson(pet);
+        return Pet.toGetResponseJson(pet);
     }
 
     public Pet checkPetExistence(UUID id){
@@ -47,19 +47,19 @@ public class PetService {
 
     @Transactional
     public PetPostResponseJson create(PetPostRequestJson petPostRequestJson) {
-        Pet pet = petMapper.createRequestToPet(petPostRequestJson);
-        return petMapper.petToPostResponseJson(petRepository.save(pet));
+        Pet pet = Pet.fromCreateRequest(petPostRequestJson, birthdayFormatter);
+        return Pet.toPostResponseJson(petRepository.save(pet));
     }
 
     @Transactional
     public PetGetResponseJson replace(UUID id, PetPutRequestJson petPutRequestJson) {
         Pet pet = checkPetExistence(id);
 
-        Pet petUpdated = petMapper.petPutRequestToPet(pet, petPutRequestJson);
+        Pet petUpdated = Pet.fromPutRequest(pet, petPutRequestJson, birthdayFormatter);
 
         petRepository.save(petUpdated);
 
-        return petMapper.petToGetResponseJson(checkPetExistence(id));
+        return Pet.toGetResponseJson(checkPetExistence(id));
     }
 
     @Transactional
