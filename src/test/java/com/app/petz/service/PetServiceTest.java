@@ -36,14 +36,6 @@ public class PetServiceTest {
     void setup(){
         BDDMockito.when(petRepositoryMock.save(ArgumentMatchers.any(Pet.class)))
                 .thenReturn(PetCreator.createValidPet());
-        BDDMockito.when(petMapperMock.createRequestToPet(ArgumentMatchers.any(PetPostRequestJson.class)))
-                        .thenReturn(PetCreator.createValidPet());
-        BDDMockito.when(petMapperMock.petToPostResponseJson(ArgumentMatchers.any(Pet.class)))
-                        .thenReturn((PetCreator.createPetPostResponseJson()));
-
-        BDDMockito.when(petMapperMock.petToGetResponseJson(ArgumentMatchers.any(Pet.class)))
-                        .thenReturn(PetCreator.createPetGetResponseJson());
-
         BDDMockito.when(petRepositoryMock.findById(ArgumentMatchers.any(UUID.class)))
                 .thenReturn(Optional.of(PetCreator.createValidPet()));
 
