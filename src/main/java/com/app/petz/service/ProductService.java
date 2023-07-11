@@ -8,8 +8,6 @@ import com.app.petz.core.responses.ProductPostResponseJson;
 import com.app.petz.core.responses.ProductSizesGetResponseJson;
 import com.app.petz.enums.ProductSizes;
 import com.app.petz.exception.ProductNotFoundException;
-import com.app.petz.mapper.ProductMapper;
-import com.app.petz.mapper.ProductSizeMapper;
 import com.app.petz.model.Product;
 import com.app.petz.model.ProductSize;
 import com.app.petz.repository.ProductRepository;
@@ -28,23 +26,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductMapper productMapper;
     private final ProductRepository productRepository;
-
-    private final ProductSizeMapper productSizeMapper;
     private final ProductSizeRepository productSizeRepository;
 
     public List<ProductGetPutResponseJson> findAll() {
         return productRepository.findAllNotRemoved()
                 .stream()
-                .map(productMapper::productToGetPutResponseJson)
+                .map(Product::toGetPutResponseJson)
                 .toList();
     }
 
     public ProductGetPutResponseJson findById(UUID id) {
         Product product = checkProductExistenceById(id);
 
-        return productMapper.productToGetPutResponseJson(product);
+        return Product.toGetPutResponseJson(product);
     }
 
     public ProductSizesGetResponseJson findProductSizesById(UUID id) {
@@ -54,7 +49,7 @@ public class ProductService {
             throw new ProductNotFoundException("O produto solicitado não possui tamanhos cadastrados!");
         }
 
-        return productSizeMapper.productModelToGetResponseJson(productSizes);
+        return ProductSize.toGetResponseJson(productSizes);
     }
 
     public Product checkProductExistenceById(UUID id) {
@@ -69,7 +64,7 @@ public class ProductService {
     @Transactional
     public ProductPostResponseJson create(ProductPostRequestJson productPostRequestJson) {
 
-        Product productRequest = productMapper.postRequestJsonToProduct(productPostRequestJson);
+        Product productRequest = Product.fromPostRequestJson(productPostRequestJson);
 
         productRepository.save(productRequest);
 
@@ -82,7 +77,7 @@ public class ProductService {
                 ProductSize productSize = ProductSize.builder()
                         .removed(false)
                         .product(productRequest)
-                        .size(productSizeMapper.mapStringToProductSize(size))
+                        .size(ProductSize.mapStringToProductSize(size))
                         .creationDate(LocalDateTime.now())
                         .build();
 
@@ -101,18 +96,18 @@ public class ProductService {
             productSizeRepository.save(productSize);
         }
 
-        return productMapper.productToPostResponseJson(productRequest);
+        return Product.toPostResponseJson(productRequest);
     }
 
     @Transactional
     public ProductGetPutResponseJson replace(UUID id, ProductPutRequestJson productPutRequestJson) {
         Product product = checkProductExistenceById(id);
 
-        Product productUpdated = productMapper.productPutRequestToProduct(product, productPutRequestJson);
+        Product productUpdated = Product.fromProductPutRequest(product, productPutRequestJson);
 
         productRepository.save(productUpdated);
 
-        return productMapper.productToGetPutResponseJson(checkProductExistenceById(id));
+        return Product.toGetPutResponseJson(checkProductExistenceById(id));
     }
 
     @Transactional
@@ -132,6 +127,6 @@ public class ProductService {
 
         productRepository.save(productRemoved);
 
-        return productMapper.productToMainInfoDto(product);
+        return Product.toMainInfoDto(product);
     }
 }
